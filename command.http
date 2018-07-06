@@ -9,7 +9,7 @@
 GET https://localhost:8080/exec?cmd=ls%20-l
 Accept: application/json
 ###
-GET https://localhost:8080/exec?cmd=psa%20-axe
+GET https://localhost:8080/exec?cmd=ps%20-a && ls
 Accept: application/json
 
 ###

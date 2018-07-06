@@ -1,16 +1,17 @@
 package main
 
 import (
-	"net/http"
-	"os/exec"
-	"strings"
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"net/http"
+	"os/exec"
+	"strings"
 )
 
 /*
 TODO: Include stderr in output
+FIX: single command exec "ls" (no args)
 */
 
 type result struct {
@@ -22,17 +23,18 @@ type result struct {
 func commandCall(w http.ResponseWriter, r *http.Request) {
 	message := r.URL.Query()
 
-	cmd := strings.Fields(message.Get("cmd"))[0]
-	params := strings.Fields(message.Get("cmd"))[1:]
+	//	cmd := strings.Fields(message.Get("cmd"))
+	cmdln := message.Get("cmd")
+	log.Println(cmdln)
 
 	// Get full path of command
-	cmd, lookErr := exec.LookPath(cmd)
+	cmd, lookErr := exec.LookPath(strings.Fields(cmdln)[0])
 	if lookErr != nil {
 		panic(lookErr)
 	}
 
-	// Prepare full command
-	executing := exec.Command(cmd, strings.Join(params, " "))
+	//	log.Println(args)
+	executing := exec.Command(cmd, strings.Fields(cmdln)[1:]...)
 
 	// Prepare pipes
 	cmdIn, _ := executing.StdinPipe()
